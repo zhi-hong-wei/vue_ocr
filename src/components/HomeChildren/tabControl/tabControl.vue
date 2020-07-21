@@ -17,16 +17,16 @@
           <ocr_comm/>
         </div>
         <div class="tab-card">
-
+          <detail/>
         </div>
         <div class="tab-card">
-
+          <bankcard/>
         </div>
         <div class="tab-card">
           <driving/>
         </div>
         <div class="tab-card">
-
+          <driving_license/>
         </div>
         <div class="tab-card">
           <deep_crop/>
@@ -35,7 +35,7 @@
           <super_resolution/>
         </div>
         <div class="tab-card">
-
+          <biz_license/>
         </div>
       </div>
       <!--v-for="item in result"-->
@@ -45,15 +45,15 @@
 </template>
 
 <script>
-  // 'https://mp.weixin.qq.com/wxamusic/ocr/idcard?action=driving_license&test_sign=yi_ke_shi_ge_sha_diao'
-  // 'https://mp.weixin.qq.com/wxamusic/ocr/idcard?action=idcard&type=photo&test_sign=yi_ke_shi_ge_sha_diao'
-  // 'https://mp.weixin.qq.com/wxamusic/ocr/idcard?action=biz_license&test_sign=yi_ke_shi_ge_sha_diao'
-  // 'https://mp.weixin.qq.com/wxamusic/ocr/idcard?action=bankcard&test_sign=yi_ke_shi_ge_sha_diao'
   import Canvas from 'components/HomeChildren/Canvas/Canvas'
   import ocr_comm from 'components/HomeChildren/Canvas/ocr_common/ocr_comm'
   import driving from 'components/HomeChildren/Canvas/driving/driving'
   import deep_crop from 'components/HomeChildren/Canvas/deep_crop/deep_crop'
   import super_resolution from 'components/HomeChildren/Canvas/super_resolution/super_resolution'
+  import detail from 'components/HomeChildren/Canvas/detail/detail'
+  import bankcard from 'components/HomeChildren/Canvas/bankcard/bankcard'
+  import driving_license from 'components/HomeChildren/Canvas/driving_license/driving_license'
+  import biz_license from 'components/HomeChildren/Canvas/biz_license/biz_license'
 
   export default {
     name: "tabControl",
@@ -63,6 +63,10 @@
       driving,
       deep_crop,
       super_resolution,
+      biz_license,
+      driving_license,
+      bankcard,
+      detail,
 
     },
     data() {
