@@ -78,40 +78,73 @@
           for (let i = 0; i < this.ocr_comm.length; i++) {
             // console.log(this.ocr_comm)
             let show = this.ocr_comm[i]
-            // 原图坐标
-            // console.log(show)
-            let X1 = show.pos.left_top.x
-            let Y1 = show.pos.left_top.y
-            let X2 = show.pos.right_bottom.x
-            let Y2 = show.pos.right_bottom.y
-            let startPoint = [X1, Y1],
-              endPoint = [X2, Y2];
-            let Num_x = startPoint[0] * widthScal + this.IL
-            let Num_y = startPoint[1] * widthScal + this.IT
-            let Num_width = (endPoint[0] - startPoint[0]) * widthScal
-            let Num_height = (endPoint[1] - startPoint[1]) * widthScal
-            this.CTX.strokeStyle = 'blue';
-            this.CTX.strokeRect(Num_x, Num_y, Num_width, Num_height);
-            if (Num_width < Num_height) {
-              let top_x = Num_x
-              let top_y = (startPoint[1] - (endPoint[0] - startPoint[0])) * widthScal + this.IT
-              let w_h = Num_width
-              console.log(w_h)
-              this.CTX.strokeStyle = '#006bff'
-              this.CTX.fillStyle = '#006bff'
-              this.CTX.fillText(i + 1, Num_x + (w_h / 2), Num_y, w_h)
-              this.CTX.strokeRect(top_x, top_y, w_h, w_h)
-              this.CTX.textAlign = 'center'
-            } else {
-              let left_X = (startPoint[0] - (endPoint[1] - startPoint[1])) * widthScal + this.IL
-              let left_Y = Num_y
-              let W_H = Num_height
 
-              this.CTX.strokeStyle = '#006bff'
+            // 原图坐标
+            let X1 = show.pos.left_top.x * widthScal + this.IL
+            let Y1 = show.pos.left_top.y * widthScal + this.IT
+            let X2 = show.pos.right_top.x * widthScal + this.IL
+            let Y2 = show.pos.right_top.y * widthScal + this.IT
+            let X3 = show.pos.right_bottom.x * widthScal + this.IL
+            let Y3 = show.pos.right_bottom.y * widthScal + this.IT
+            let X4 = show.pos.left_bottom.x * widthScal + this.IL
+            let Y4 = show.pos.left_bottom.y * widthScal + this.IT
+
+            this.CTX.strokeStyle = 'blue';
+            this.CTX.beginPath();
+            this.CTX.moveTo(X1, Y1)
+            this.CTX.lineTo(X2, Y2)
+
+            this.CTX.moveTo(X2, Y2)
+            this.CTX.lineTo(X3, Y3)
+
+            this.CTX.moveTo(X3, Y3)
+            this.CTX.lineTo(X4, Y4)
+
+            this.CTX.moveTo(X4, Y4)
+            this.CTX.lineTo(X1, Y1)
+            this.CTX.stroke()
+            // 区别横框竖框，画序号及小框
+            if ((X3 - X4) > (Y4 - Y1)) {
+              this.CTX.beginPath();
+              this.CTX.moveTo(X4, Y4)
+              this.CTX.lineTo(X4 - (Y4 - Y1), Y4)
+
+              this.CTX.moveTo(X4 - (Y4 - Y1), Y4)
+              this.CTX.lineTo(X4 - (Y4 - Y1), Y4 - (Y4 - Y1))
+
+              this.CTX.moveTo(X4 - (Y4 - Y1), Y4 - (Y4 - Y1))
+              this.CTX.lineTo(X1, Y1)
+              this.CTX.stroke()
+              // 画序号
+              let w_h = Y4 - Y1
+              let fontsize = w_h + 'px'
+              let fontFamily = "宋体"
+              let Num_font = fontsize + ' ' + fontFamily
+              this.CTX.font = Num_font
               this.CTX.fillStyle = '#006bff'
-              this.CTX.fillText(i + 1, left_X + W_H / 2, left_Y + W_H, W_H)
-              this.CTX.strokeRect(left_X, left_Y, W_H, W_H)
+              this.CTX.fillText(i + 1, X4 - (Y4 - Y1) / 2, Y4)
               this.CTX.textAlign = 'center'
+
+            } else {
+              this.CTX.beginPath();
+              this.CTX.moveTo(X1, Y1)
+              this.CTX.lineTo(X1, Y1 - (X2 - X1))
+
+              this.CTX.moveTo(X1, Y1 - (X2 - X1))
+              this.CTX.lineTo(X2, Y2 - (X2 - X1))
+
+              this.CTX.moveTo(X2, Y2 - (X2 - X1))
+              this.CTX.lineTo(X2, Y2)
+              this.CTX.stroke()
+
+              let W_H = X2 - X1
+              let fontsize=W_H+'px'
+                let fontFamily="宋体"
+                let Num_font=fontsize+' '+fontFamily
+                this.CTX.font=Num_font
+              this.CTX.fillStyle='#006bff'
+              this.CTX.fillText(i + 1, X1 + (X2 - X1) / 2, Y1, W_H)
+              this.CTX.textAlign='center'
             }
 
           }

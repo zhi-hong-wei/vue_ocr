@@ -65,13 +65,16 @@
         // 触发FILE选择文件的操作
         this.$refs.file.click();
       },
-      changeFunc() {
+      async changeFunc() {
         // 选择了新的图片
         // console.dir(this.$refs.file)
         let file = this.$refs.file.files[0];
         // console.dir(file)
         this.show = true
-        if (!file) return;
+        if (!file){
+          this.show =false
+          return;
+        }
         // 先基于FileReader进行文件的读取
         let fileExample = new FileReader();
         // console.dir(fileExample)
@@ -102,10 +105,11 @@
             // 绘制图片
             this.drawImage();
 
-            //上传文件1
-            this.uploadImg(file)
+
           };
         }
+        //上传文件1
+        await this.uploadImg(file)
       },
       drawImage() {
         // 创建2D渲染画布
@@ -115,13 +119,13 @@
         // 绘制图片
         this.CTX.drawImage(this.IMAGE, this.IL, this.IT, this.IW, this.IH);
       },
-      uploadImg(file) {
+     async uploadImg(file) {
         var forms = new FormData();
         forms.append('file', file)
         let config = {
           headers: {'Content-Type': 'multipart/form-data'}
         };
-        this.$axios.post('/apidebug_imagequery?action=super_resolution', forms, config)
+       await this.$axios.post('/apidebug_imagequery?action=super_resolution', forms, config)
           .then(res => {
             this.show = false
             console.log(res);
@@ -224,6 +228,11 @@
     display: flex;
   }
 
+  .list img{
+    /*display:block;*/
+    width:100%;
+    height:100%;
+  }
   .index {
     width: 24px;
     height: 24px;

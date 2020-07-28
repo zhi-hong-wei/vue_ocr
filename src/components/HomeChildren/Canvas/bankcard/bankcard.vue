@@ -72,7 +72,7 @@
           let config = {
             headers: {'Content-Type': 'multipart/form-data'}
           };
-          this.$axios.post('/ocr/idcard?action=bankcard&test_sign=yi_ke_shi_ge_sha_diao', forms, config)
+          this.$axios.post('/ocr/idcard?action=bankcard&test_sign=yi_ke_shi_ge_sha_diao&useruin=1008611', forms, config)
             .then(res => {
               console.log(res);
               this.loading=false;

@@ -17,6 +17,7 @@ module.exports = {
       '/api':{
         target:'https://mp.weixin.qq.com/wxamusic',
         changeOrigin: true,
+        secure: false,
         pathRewrite: {
           '^/api': ''
         }
