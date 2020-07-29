@@ -18,15 +18,17 @@
           bankcard:['number'],
           result_list:[],
           pre:['卡号：'],
+          pos_card:'',
           loading:false,
           err:false
         }
       },
       methods:{
-        upload(file,canvas){
+       async upload(file,canvas){
           // console.log(file)
           if (!file) return;
           this.loading=true
+         let widthScal = 0
           // 先基于FileReader进行文件的读取
           let fileExample = new FileReader();
           // console.dir(fileExample)
@@ -54,6 +56,8 @@
               }
               this.IL = (NCW - this.IW) / 2;
               this.IT = (NCH - this.IH) / 2;
+              widthScal = this.IW / this.IMAGE.width;
+
               // 绘制图片
               this.CTX = canvas.getContext("2d");
               // 清空画布
@@ -62,25 +66,82 @@
               this.CTX.drawImage(this.IMAGE, this.IL, this.IT, this.IW, this.IH);
 
               //上传文件1
-              this.uploadImg(file)
+
             };
           }
+         await this.uploadImg(file)
+         this.strokeRect(widthScal)
         },
-        uploadImg(file) {
+
+        strokeRect(widthScal){
+          let show=JSON.parse(this.pos_card)
+          // console.log(show)
+          let X1 = show.card_position.pos.left_top.x * widthScal + this.IL
+          let Y1 = show.card_position.pos.left_top.y * widthScal + this.IT
+          let X2 = show.card_position.pos.right_top.x * widthScal + this.IL
+          let Y2 = show.card_position.pos.right_top.y * widthScal + this.IT
+          let X3 = show.card_position.pos.right_bottom.x * widthScal + this.IL
+          let Y3 = show.card_position.pos.right_bottom.y * widthScal + this.IT
+          let X4 = show.card_position.pos.left_bottom.x * widthScal + this.IL
+          let Y4 = show.card_position.pos.left_bottom.y * widthScal + this.IT
+          this.CTX.strokeStyle = 'red';
+          this.CTX.lineWidth=3;
+          this.CTX.beginPath();
+          this.CTX.moveTo(X1, Y1)
+          this.CTX.lineTo(X2, Y2)
+
+          this.CTX.moveTo(X2, Y2)
+          this.CTX.lineTo(X3, Y3)
+
+          this.CTX.moveTo(X3, Y3)
+          this.CTX.lineTo(X4, Y4)
+
+          this.CTX.moveTo(X4, Y4)
+          this.CTX.lineTo(X1, Y1)
+          this.CTX.stroke()
+
+          let numX1 = show.number.pos.left_top.x * widthScal + this.IL
+          let numY1 = show.number.pos.left_top.y * widthScal + this.IT
+          let numX2 = show.number.pos.right_top.x * widthScal + this.IL
+          let numY2 = show.number.pos.right_top.y * widthScal + this.IT
+          let numX3 = show.number.pos.right_bottom.x * widthScal + this.IL
+          let numY3 = show.number.pos.right_bottom.y * widthScal + this.IT
+          let numX4 = show.number.pos.left_bottom.x * widthScal + this.IL
+          let numY4 = show.number.pos.left_bottom.y * widthScal + this.IT
+          this.CTX.strokeStyle = 'yellow';
+          this.CTX.lineWidth=1;
+          this.CTX.beginPath();
+          this.CTX.moveTo(numX1, numY1)
+          this.CTX.lineTo(numX2, numY2)
+
+          this.CTX.moveTo(numX2, numY2)
+          this.CTX.lineTo(numX3, numY3)
+
+          this.CTX.moveTo(numX3, numY3)
+          this.CTX.lineTo(numX4, numY4)
+
+          this.CTX.moveTo(numX4, numY4)
+          this.CTX.lineTo(numX1, numY1)
+          this.CTX.stroke()
+        },
+
+       async uploadImg(file) {
           var forms = new FormData();
           forms.append('file', file)
           let config = {
             headers: {'Content-Type': 'multipart/form-data'}
           };
-          this.$axios.post('/ocr/idcard?action=bankcard&test_sign=yi_ke_shi_ge_sha_diao&useruin=1008611', forms, config)
+         await this.$axios.post('/ocr/idcard?action=bankcard&test_sign=yi_ke_shi_ge_sha_diao&useruin=1008611', forms, config)
             .then(res => {
               console.log(res);
               this.loading=false;
               // this.driving = res.data.ocrcomm_res.items
+
               const data=res.data;
               if (data.hasOwnProperty("bankcard_result")) {
                 this.err=false;
                 let result = data.bankcard_result;
+                this.pos_card=JSON.stringify(result);
                 let data_to_set = [];
                 for (let i = 0; i < this.bankcard.length; i++) {
                   let result_key = this.bankcard[i];
